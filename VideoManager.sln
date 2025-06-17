@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VideoManager.API", "VideoManager.API\VideoManager.API.csproj", "{C2E69705-AA96-45D0-AED8-2770888C1BC0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VideoManager.Application", "VideoManager.Application\VideoManager.Application.csproj", "{1D7177AE-53EC-4BC3-91D5-1B6B275EB17F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VideoManager.Domain", "VideoManager.Domain\VideoManager.Domain.csproj", "{B23548AE-E9FE-418B-928A-ABE6CBCED01C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VideoManager.Infrastructure", "VideoManager.Infrastructure\VideoManager.Infrastructure.csproj", "{8A38F007-7E93-43C3-9DE4-6560A7B95F74}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VideoManager.Tests", "VideoManager.Tests\VideoManager.Tests.csproj", "{0117E72E-677F-4EB5-9AFD-3C8A65C231FF}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AC60F252-29D3-46FB-B2F8-3A9BCA2E37BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2E69705-AA96-45D0-AED8-2770888C1BC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2E69705-AA96-45D0-AED8-2770888C1BC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2E69705-AA96-45D0-AED8-2770888C1BC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2E69705-AA96-45D0-AED8-2770888C1BC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D7177AE-53EC-4BC3-91D5-1B6B275EB17F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D7177AE-53EC-4BC3-91D5-1B6B275EB17F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D7177AE-53EC-4BC3-91D5-1B6B275EB17F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D7177AE-53EC-4BC3-91D5-1B6B275EB17F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B23548AE-E9FE-418B-928A-ABE6CBCED01C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B23548AE-E9FE-418B-928A-ABE6CBCED01C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B23548AE-E9FE-418B-928A-ABE6CBCED01C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B23548AE-E9FE-418B-928A-ABE6CBCED01C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A38F007-7E93-43C3-9DE4-6560A7B95F74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A38F007-7E93-43C3-9DE4-6560A7B95F74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A38F007-7E93-43C3-9DE4-6560A7B95F74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A38F007-7E93-43C3-9DE4-6560A7B95F74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0117E72E-677F-4EB5-9AFD-3C8A65C231FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0117E72E-677F-4EB5-9AFD-3C8A65C231FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0117E72E-677F-4EB5-9AFD-3C8A65C231FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0117E72E-677F-4EB5-9AFD-3C8A65C231FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC60F252-29D3-46FB-B2F8-3A9BCA2E37BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC60F252-29D3-46FB-B2F8-3A9BCA2E37BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC60F252-29D3-46FB-B2F8-3A9BCA2E37BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC60F252-29D3-46FB-B2F8-3A9BCA2E37BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
