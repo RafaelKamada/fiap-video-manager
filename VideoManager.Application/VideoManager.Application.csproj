@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\VideoManager.Domain\VideoManager.Domain.csproj" />
     <ProjectReference Include="..\VideoManager.Infrastructure\VideoManager.Infrastructure.csproj" />
   </ItemGroup>

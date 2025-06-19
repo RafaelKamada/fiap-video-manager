@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using VideoManager.Application.Commands;
 using VideoManager.Domain.Entities;
 using VideoManager.Domain.Enums;
 using VideoManager.Domain.Interfaces;
@@ -7,14 +8,10 @@ namespace VideoManager.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class VideosController : ControllerBase
+public class VideosController(IVideoRepository videoRepository, IAddVideoCommand addVideoCommand) : ControllerBase
 {
-    private readonly IVideoRepository _videoRepository;
-
-    public VideosController(IVideoRepository videoRepository)
-    {
-        _videoRepository = videoRepository;
-    }
+    private readonly IVideoRepository _videoRepository = videoRepository;
+    private readonly IAddVideoCommand _addVideoCommand = addVideoCommand;
 
     [HttpPost("upload")]
     public async Task<IActionResult> Upload(IFormFile arquivo, [FromQuery] string usuario)
@@ -22,25 +19,15 @@ public class VideosController : ControllerBase
         if (arquivo == null || arquivo.Length == 0)
             return BadRequest("Nenhum arquivo enviado.");
 
-        using var memoryStream = new MemoryStream();
-        await arquivo.CopyToAsync(memoryStream);
-        var conteudo = memoryStream.ToArray();
+        var result = await _addVideoCommand.Execute(arquivo, usuario);
 
-        var video = new Video
-        {
-            NomeArquivo = arquivo.FileName,
-            Conteudo = conteudo,
-            Status = VideoStatus.Uploaded,
-            DataCriacao = DateTime.UtcNow,
-            Usuario = usuario
-        };
-
-        await _videoRepository.Add(video);
-
-        return Ok(new { video.Id, video.NomeArquivo, video.Status });
+        if (result.Success)
+            return Ok(result);
+        else
+            return BadRequest(result);
     }
 
-    
+
     [HttpPut("status/{id}")]
     public async Task<IActionResult> Status(IFormFile arquivo, int id, string usuario)
     {
