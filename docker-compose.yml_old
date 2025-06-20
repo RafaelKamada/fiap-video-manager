@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  videomanager.postgres:
+    image: postgres:latest
+    container_name: videomanager.postgres
+    ports:
+      - "5432:5432"   
+    environment:
+      - POSTGRES_DB=VideoManager
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+volumes:
+  postgres_data:

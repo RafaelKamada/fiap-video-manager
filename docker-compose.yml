@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  videomanager.api:
+    image: ${DOCKER_REGISTRY-}videomanagerapi
+    container_name: videomanager.api
+    build:
+      context: .
+      dockerfile: VideoManager.API/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      -  videomanager.postgres
+    command: >
+      sh -c "until pg_isready -h postgres -p 5432 -U postgres; do echo 'Aguardando PostgreSQL...'; sleep 2; done &&
+      dotnet VideoManager.API.dll"
+
+  videomanager.postgres:
+    image: postgres:latest
+    container_name: videomanager.postgres
+    ports:
+      - "5432:5432"   
+    environment:
+      - POSTGRES_DB=VideoManager
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+volumes:
+  postgres_data:
