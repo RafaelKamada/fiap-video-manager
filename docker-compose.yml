@@ -9,6 +9,12 @@ services:
       dockerfile: VideoManager.API/Dockerfile
     ports:
       - "8080:8080"
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_SERVICE_URL=http://elasticmq:9324
+      - SQS__QueueName=video-processing-queue
     depends_on:
       -  videomanager.postgres
     command: >
