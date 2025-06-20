@@ -1,3 +1,4 @@
+using VideoManager.Application.Commands;
 using VideoManager.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,8 @@ builder.Services.AddSwaggerGen();
 
 // Configuração da infraestrutura
 builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddScoped<IAddVideoCommand, AddVideoCommand>();
 
 var app = builder.Build();
 
