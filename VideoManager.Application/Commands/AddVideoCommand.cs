@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using VideoManager.Application.Commands.Interfaces;
 using VideoManager.Application.Common.Reponse;
 using VideoManager.Domain.Entities;
 using VideoManager.Domain.Enums;
@@ -6,11 +7,13 @@ using VideoManager.Domain.Interfaces;
 
 namespace VideoManager.Application.Commands;
 
-public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsService) : IAddVideoCommand
+public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsService, ISendEmailCommand sendEmail) : IAddVideoCommand
 {
     private readonly IVideoRepository _videoRepository = videoRepository;
     private readonly ISqsService _sqsService = sqsService;
-    public async Task<AddVideoResult> Execute(IFormFile arquivo, string usuario)
+    private readonly ISendEmailCommand _sendEmail = sendEmail;
+
+    public async Task<VideoResult> Execute(IFormFile arquivo, string usuario)
     {
         try
         {
@@ -24,13 +27,13 @@ public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsSe
             await arquivo.CopyToAsync(memoryStream);
             var conteudo = memoryStream.ToArray();
 
-            Video video = MapRequest(arquivo, usuario, conteudo);
+            Video video = Helper.MapRequest(arquivo, usuario, conteudo);
 
             await SaveAsync(video);
 
             await SendVideoToSqs(video);
 
-            return new AddVideoResult
+            return new VideoResult
             {
                 Success = true,
                 VideoId = video.Id,
@@ -40,24 +43,12 @@ public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsSe
         }
         catch (Exception ex)
         {
-            return new AddVideoResult
+            return new VideoResult
             {
                 Success = false,
                 ErrorMessage = ex.Message
             };
         }            
-    }
-
-    private static Video MapRequest(IFormFile arquivo, string usuario, byte[] conteudo)
-    {
-        return new Video
-        {
-            NomeArquivo = arquivo.FileName,
-            Conteudo = conteudo,
-            Status = VideoStatus.Uploaded,
-            DataCriacao = DateTime.UtcNow,
-            Usuario = usuario
-        };
     }
 
     private async Task SaveAsync(Video video)
@@ -84,8 +75,26 @@ public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsSe
         {
             video.Status = VideoStatus.Erro;
             video.MensagemErro = ex.Message;
-            await _videoRepository.Update(video); //Aqui tem que enviar mensagem de erro
+
+            await _videoRepository.Update(video);
+
+            await SendEmail(video, ex.Message);
+
             throw new Exception("Erro ao enviar o vídeo para SQS", ex);
+        }
+    }
+
+    private async Task SendEmail(Video video, string mensagemErro)
+    {
+        try
+        {
+            Console.WriteLine($"Enviando e-mail para o usuário: {video.Usuario}, Assunto: Erro ao adicionar vídeo");
+
+            await _sendEmail.SendEmailAsync(video.Usuario, video.NomeArquivo, video.Status, "Erro para adicionar video", mensagemErro);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Erro ao enviar e-mail", ex);
         }
     }
 }

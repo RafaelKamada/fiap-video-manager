@@ -7,7 +7,7 @@ using VideoManager.Domain.Enums;
 
 namespace VideoManager.Application.Common.Reponse
 {
-    public class AddVideoResult
+    public class VideoResult
     {
         public bool Success { get; set; }
         public string? ErrorMessage { get; set; }
