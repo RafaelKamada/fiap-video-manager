@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  localstack:
+    image: localstack/localstack
+    container_name: localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sqs
+      - DEBUG=1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_REGION=us-east-1
+    volumes:
+     - localstack_data:/var/lib/localstack
+     - /var/run/docker.sock:/var/run/docker.sock
+
   videomanager.api:
     image: ${DOCKER_REGISTRY-}videomanagerapi
     container_name: videomanager.api
@@ -11,6 +26,7 @@ services:
       - "8080:8080"
     depends_on:
       -  videomanager.postgres
+      - localstack
     command: >
       sh -c "until pg_isready -h postgres -p 5432 -U postgres; do echo 'Aguardando PostgreSQL...'; sleep 2; done &&
       dotnet VideoManager.API.dll"
@@ -28,4 +44,5 @@ services:
       - postgres_data:/var/lib/postgresql/data/
 
 volumes:
+  localstack_data:
   postgres_data:

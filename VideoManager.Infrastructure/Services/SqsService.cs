@@ -10,9 +10,10 @@ using Policy = Polly.Policy;
 
 namespace VideoManager.Infrastructure.Services;
 
-public class SqsService(IAmazonSQS sqsClient) : ISqsService
+public class SqsService(IAmazonSQS sqsClient ,string queueUrl) : ISqsService
 {
     private readonly IAmazonSQS _sqsClient = sqsClient;
+    private readonly string _queueUrl = queueUrl ?? throw new Exception("Url não mapeada");
 
     private readonly AsyncRetryPolicy _retryPolicy = Policy
             .Handle<Exception>()
@@ -24,8 +25,6 @@ public class SqsService(IAmazonSQS sqsClient) : ISqsService
                     Console.WriteLine($"Erro ao enviar para o SQS. Tentando novamente em {time.TotalSeconds}s...");
                 });
 
-    private const string QUEUE_URL = "https://sqs.sa-east-1.amazonaws.com/123456789012/sua-fila";
-
     public async Task SendAsync(Video video)
     {
         VideoContent message = MapRequestMessage(video);
@@ -34,7 +33,7 @@ public class SqsService(IAmazonSQS sqsClient) : ISqsService
 
         var request = new SendMessageRequest
         {
-            QueueUrl = QUEUE_URL,
+            QueueUrl = _queueUrl,
             MessageBody = messageJson
         };
 

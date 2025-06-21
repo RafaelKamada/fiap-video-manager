@@ -1,3 +1,4 @@
+using Amazon.SQS;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VideoManager.Domain.Interfaces;
@@ -17,9 +18,28 @@ public static class DependencyInjection
                 configuration.GetConnectionString("DefaultConnection") 
                 ?? throw new ArgumentNullException("Connection string not found")));
 
-        services.AddDefaultAWSOptions(configuration.GetAWSOptions());
-        services.AddAWSService<Amazon.SQS.IAmazonSQS>();
-        services.AddScoped<ISqsService, SqsService>();
+        services.AddSingleton<IAmazonSQS>(sp =>
+        {
+            var config = new AmazonSQSConfig
+            {
+                ServiceURL = "http://localstack:4566",
+                AuthenticationRegion = "us-east-1"
+            };
+
+            return new AmazonSQSClient("test", "test", config);
+        });
+
+        //services.AddDefaultAWSOptions(configuration.GetAWSOptions());
+
+        services.AddScoped<ISqsService>(provider =>
+        {
+            var sqsClient = provider.GetService<Amazon.SQS.IAmazonSQS>();
+            var queueUrl = configuration["Sqs:QueueUrl"];
+
+            if (string.IsNullOrEmpty(queueUrl)) throw new ArgumentNullException("Sqs:QueueUrl", "Queue URL not configured in appsettings.");
+            
+            return new SqsService(sqsClient, queueUrl);
+        });
 
         services.AddScoped<IEmailService>(provider =>
         {
