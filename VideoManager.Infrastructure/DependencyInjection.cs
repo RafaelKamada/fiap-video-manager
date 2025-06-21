@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VideoManager.Domain.Interfaces;
 using VideoManager.Infrastructure.Repositories;
+using VideoManager.Infrastructure.Services;
 
 namespace VideoManager.Infrastructure;
 
@@ -15,6 +16,21 @@ public static class DependencyInjection
             new VideoRepository(
                 configuration.GetConnectionString("DefaultConnection") 
                 ?? throw new ArgumentNullException("Connection string not found")));
+
+        services.AddDefaultAWSOptions(configuration.GetAWSOptions());
+        services.AddAWSService<Amazon.SQS.IAmazonSQS>();
+        services.AddScoped<ISqsService, SqsService>();
+
+        services.AddScoped<IEmailService>(provider =>
+        {
+            var configuration = provider.GetRequiredService<IConfiguration>();
+
+            var apiKey = configuration["SendGrid:ApiKey"];
+            var fromEmail = configuration["SendGrid:FromEmail"];
+            var fromName = configuration["SendGrid:FromName"];
+
+            return new EmailService(apiKey ?? string.Empty, fromEmail ?? string.Empty, fromName ?? string.Empty);
+        });
 
         return services;
     }

@@ -8,7 +8,7 @@ using VideoManager.Domain.Entities;
 using VideoManager.Domain.Interfaces;
 using Policy = Polly.Policy;
 
-namespace VideoManager.Infrastructure;
+namespace VideoManager.Infrastructure.Services;
 
 public class SqsService(IAmazonSQS sqsClient) : ISqsService
 {
