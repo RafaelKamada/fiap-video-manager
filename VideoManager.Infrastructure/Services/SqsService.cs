@@ -46,13 +46,13 @@ public class SqsService(IAmazonSQS sqsClient ,string queueUrl) : ISqsService
 
     private static VideoContent MapRequestMessage(Video video)
     {
-        var base64Content = GetArchive(video);
+        //var base64Content = GetArchive(video);
 
         var message = new VideoContent
         {
             VideoId = video.Id.ToString(),
-            Content = base64Content,
-            Extension = "zip"
+            Content = video.Caminho,
+            Extension = "string"
         };
         return message;
     }

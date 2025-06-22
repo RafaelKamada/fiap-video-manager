@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   localstack:
-    image: localstack/localstack
+    image: localstack/localstack:latest
     container_name: localstack
     ports:
       - "4566:4566"
@@ -15,6 +15,11 @@ services:
     volumes:
      - localstack_data:/var/lib/localstack
      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
 
   videomanager.api:
     image: ${DOCKER_REGISTRY-}videomanagerapi
@@ -25,11 +30,19 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      -  videomanager.postgres
+      - videomanager.postgres
       - localstack
+    volumes:
+      - compartilhado-videos:/app/videos
+    user: root  
     command: >
       sh -c "until pg_isready -h postgres -p 5432 -U postgres; do echo 'Aguardando PostgreSQL...'; sleep 2; done &&
       dotnet VideoManager.API.dll"
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
 
   videomanager.postgres:
     image: postgres:latest
@@ -42,7 +55,13 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1.5G
 
 volumes:
   localstack_data:
   postgres_data:
+  compartilhado-videos:

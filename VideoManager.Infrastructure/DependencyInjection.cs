@@ -18,6 +18,8 @@ public static class DependencyInjection
                 configuration.GetConnectionString("DefaultConnection") 
                 ?? throw new ArgumentNullException("Connection string not found")));
 
+        services.AddScoped<IFileStorageService, LocalFileStorageService>();
+
         services.AddSingleton<IAmazonSQS>(sp =>
         {
             var config = new AmazonSQSConfig
@@ -33,7 +35,7 @@ public static class DependencyInjection
 
         services.AddScoped<ISqsService>(provider =>
         {
-            var sqsClient = provider.GetService<Amazon.SQS.IAmazonSQS>();
+            var sqsClient = provider.GetRequiredService<Amazon.SQS.IAmazonSQS>();
             var queueUrl = configuration["Sqs:QueueUrl"];
 
             if (string.IsNullOrEmpty(queueUrl)) throw new ArgumentNullException("Sqs:QueueUrl", "Queue URL not configured in appsettings.");

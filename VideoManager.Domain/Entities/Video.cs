@@ -11,5 +11,6 @@ public class Video
     public DateTime DataCriacao { get; set; }
     public string? MensagemErro { get; set; }
     public string Usuario { get; set; } = null!;
+    public string? Caminho { get; set; } // Caminho do arquivo no sistema de arquivos
 }
  

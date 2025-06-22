@@ -7,9 +7,10 @@ using VideoManager.Domain.Interfaces;
 
 namespace VideoManager.Application.Commands;
 
-public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsService, ISendEmailCommand sendEmail) : IAddVideoCommand
+public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsService, ISendEmailCommand sendEmail, IFileStorageService fileStorage) : IAddVideoCommand
 {
     private readonly IVideoRepository _videoRepository = videoRepository;
+    private readonly IFileStorageService _fileStorage = fileStorage;
     private readonly ISqsService _sqsService = sqsService;
     private readonly ISendEmailCommand _sendEmail = sendEmail;
 
@@ -23,11 +24,12 @@ public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsSe
             if (string.IsNullOrWhiteSpace(usuario))
                 throw new ArgumentException("Usuário não pode ser nulo ou vazio.");
 
-            using var memoryStream = new MemoryStream();
-            await arquivo.CopyToAsync(memoryStream);
-            var conteudo = memoryStream.ToArray();
+            //using var memoryStream = new MemoryStream();
+            //await arquivo.CopyToAsync(memoryStream);
+            //var conteudo = memoryStream.ToArray();
+            var caminho = await SaveFile(arquivo);
 
-            Video video = Helper.MapRequest(arquivo, usuario, conteudo);
+            Video video = Helper.MapRequest(arquivo, usuario, null, caminho);
 
             await SaveAsync(video);
 
@@ -51,6 +53,19 @@ public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsSe
         }            
     }
 
+    private async Task<string> SaveFile(IFormFile file)
+    {
+        try
+        {
+            Console.WriteLine($"Salvando arquivo: {file.FileName}");
+
+            return await _fileStorage.SaveAsync(file);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Erro ao salvar o arquivo", ex);
+        }
+    }
     private async Task SaveAsync(Video video)
     {
         try

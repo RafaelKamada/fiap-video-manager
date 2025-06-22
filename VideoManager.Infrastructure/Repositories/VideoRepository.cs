@@ -5,14 +5,9 @@ using VideoManager.Domain.Interfaces;
 
 namespace VideoManager.Infrastructure.Repositories;
 
-public class VideoRepository : IVideoRepository
+public class VideoRepository(string connectionString) : IVideoRepository
 {
-    private readonly string _connectionString;
-
-    public VideoRepository(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
+    private readonly string _connectionString = connectionString;
 
     public async Task<Video?> Get(int id)
     {
@@ -34,8 +29,8 @@ public class VideoRepository : IVideoRepository
     {
         using var connection = new NpgsqlConnection(_connectionString);
         var id = await connection.QuerySingleAsync<int>(
-            @"INSERT INTO Videos (NomeArquivo, Conteudo, Status, DataCriacao, Usuario, MensagemErro) 
-              VALUES (@NomeArquivo, @Conteudo, @Status, @DataCriacao, @Usuario, @MensagemErro)
+            @"INSERT INTO Videos (NomeArquivo, Conteudo, Caminho, Status, DataCriacao, Usuario, MensagemErro) 
+              VALUES (@NomeArquivo, @Conteudo, @Caminho, @Status, @DataCriacao, @Usuario, @MensagemErro)
               RETURNING Id",
             video);
 
@@ -50,6 +45,7 @@ public class VideoRepository : IVideoRepository
             @"UPDATE Videos 
               SET NomeArquivo = @NomeArquivo,
                   Conteudo = @Conteudo,
+                  Caminho = @Caminho,
                   Status = @Status,
                   MensagemErro = @MensagemErro
               WHERE Id = @Id",

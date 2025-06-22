@@ -33,7 +33,7 @@ public class UpdateStatusCommand(IVideoRepository videoRepository, ISendEmailCom
             if (string.IsNullOrWhiteSpace(usuario))
                 throw new ArgumentException("Usuário não pode ser nulo ou vazio.");
 
-            var request = Helper.MapRequest(arquivo, usuario, conteudo);
+            var request = Helper.MapRequest(arquivo, usuario, conteudo, string.Empty);
             request.Id = videoBase.Id;
 
             await _videoRepository.Update(videoBase);
