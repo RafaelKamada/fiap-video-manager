@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using VideoManager.Application.Commands.Interfaces;
+using VideoManager.Domain.Enums;
 using VideoManager.Domain.Interfaces;
 
 namespace VideoManager.API.Controllers;
@@ -29,12 +30,12 @@ public class VideosController(IVideoRepository videoRepository,
     }
 
     [HttpPut("status/{id}")]
-    public async Task<IActionResult> Status(IFormFile arquivo, int id, string usuario)
+    public async Task<IActionResult> Status(IFormFile arquivo, int id, string usuario, string caminho, VideoStatus status)
     {
         if (arquivo == null || arquivo.Length == 0)
             return BadRequest("Nenhum arquivo enviado.");
 
-        var result = await _updateStatusCommand.Execute(arquivo, usuario, id);
+        var result = await _updateStatusCommand.Execute(arquivo, usuario, id, caminho, status);
 
         if (result.Success)
             return Ok(result);
@@ -46,7 +47,7 @@ public class VideosController(IVideoRepository videoRepository,
     public async Task<IActionResult> Download(int id)
     {
         var video = await _videoRepository.Get(id);
-        if (video == null || video.Conteudo == null)
+        if (video == null || video.Caminho == null)
             return NotFound();
 
         return File(video.Conteudo, "application/octet-stream", video.NomeArquivo);

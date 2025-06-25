@@ -11,6 +11,8 @@ public class VideoRepository(string connectionString) : IVideoRepository
 
     public async Task<Video?> Get(int id)
     {
+        Console.WriteLine("id: " + id);
+        Console.WriteLine("connectionString: " + _connectionString);
         using var connection = new NpgsqlConnection(_connectionString);
         return await connection.QueryFirstOrDefaultAsync<Video>(
             "SELECT * FROM Videos WHERE Id = @Id", 

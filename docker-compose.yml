@@ -13,6 +13,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=test
       - AWS_REGION=us-east-1
     volumes:
+     - ./init-scripts:/etc/localstack/init/ready.d
      - localstack_data:/var/lib/localstack
      - /var/run/docker.sock:/var/run/docker.sock
     deploy:
@@ -22,11 +23,13 @@ services:
           memory: 2G
 
   videomanager.api:
-    image: ${DOCKER_REGISTRY-}videomanagerapi
+    image: japamanoel/video_manager:latest
     container_name: videomanager.api
-    build:
-      context: .
-      dockerfile: VideoManager.API/Dockerfile
+    # image: ${DOCKER_REGISTRY-}videomanagerapi
+    # container_name: videomanager.api
+    # build:
+    #   context: .
+    #   dockerfile: VideoManager.API/Dockerfile
     ports:
       - "8080:8080"
     depends_on:

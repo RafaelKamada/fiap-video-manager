@@ -24,12 +24,12 @@ public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsSe
             if (string.IsNullOrWhiteSpace(usuario))
                 throw new ArgumentException("Usuário não pode ser nulo ou vazio.");
 
-            //using var memoryStream = new MemoryStream();
-            //await arquivo.CopyToAsync(memoryStream);
-            //var conteudo = memoryStream.ToArray();
+            using var memoryStream = new MemoryStream();
+            await arquivo.CopyToAsync(memoryStream);
+            var conteudo = memoryStream.ToArray();
             var caminho = await SaveFile(arquivo);
 
-            Video video = Helper.MapRequest(arquivo, usuario, null, caminho);
+            Video video = Helper.MapRequest(arquivo, usuario, conteudo, caminho);
 
             await SaveAsync(video);
 
@@ -75,7 +75,7 @@ public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsSe
         }
         catch (Exception ex)
         {
-            throw new Exception("Erro ao adicionar o vídeo", ex);
+            throw new Exception("Erro ao adicionar o vídeo: " + video?.MensagemErro, ex);
         }
     }
 
@@ -94,6 +94,8 @@ public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsSe
             await _videoRepository.Update(video);
 
             await SendEmail(video, ex.Message);
+            
+            Console.WriteLine($"Erro ao enviar o vídeo para SQS: {ex.Message}");
 
             throw new Exception("Erro ao enviar o vídeo para SQS", ex);
         }

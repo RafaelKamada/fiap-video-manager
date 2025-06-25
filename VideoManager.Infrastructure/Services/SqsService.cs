@@ -31,6 +31,9 @@ public class SqsService(IAmazonSQS sqsClient ,string queueUrl) : ISqsService
 
         var messageJson = JsonSerializer.Serialize(message);
 
+        Console.WriteLine("url: " + _queueUrl);
+        Console.WriteLine("messageJson: " + messageJson);
+
         var request = new SendMessageRequest
         {
             QueueUrl = _queueUrl,

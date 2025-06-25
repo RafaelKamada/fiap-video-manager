@@ -25,6 +25,7 @@ public static class DependencyInjection
             var config = new AmazonSQSConfig
             {
                 ServiceURL = "http://localstack:4566",
+                UseHttp = true,
                 AuthenticationRegion = "us-east-1"
             };
 
