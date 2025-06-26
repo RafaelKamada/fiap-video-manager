@@ -11,7 +11,7 @@ Este repositório constrói um serviço para gerenciamento de vídeos.</p>
  
 
 ## 🏗️ Arquitetura de Microsserviços
-
+![Arquitetura](arquitetura.png?raw=true&cachebuster=v2 "Arquitetura")
 
 ### :computer: Tecnologias Utilizadas
 - Linguagem escolhida: .NET
