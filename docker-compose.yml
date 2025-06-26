@@ -1,26 +1,32 @@
-version: '3.8'
-
 services:
   localstack:
     image: localstack/localstack:latest
     container_name: localstack
     ports:
-      - "4566:4566"
+      - "4566:4566"            # Porta padrão do LocalStack para todos os serviços
+      - "4572:4572"            # Porta para S3
     environment:
-      - SERVICES=sqs
+      - SERVICES=sqs,s3     # Habilita SQS e S3
       - DEBUG=1
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
-      - AWS_REGION=us-east-1
+      - AWS_DEFAULT_REGION=us-east-1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DATA_DIR=/tmp/localstack/data
+      - HOSTNAME_EXTERNAL=localstack 
     volumes:
-     - ./init-scripts:/etc/localstack/init/ready.d
-     - localstack_data:/var/lib/localstack
-     - /var/run/docker.sock:/var/run/docker.sock
+      - ./init-scripts:/etc/localstack/init/ready.d
+      - localstack_data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
     deploy:
       resources:
         limits:
           cpus: '2.0'
-          memory: 2G
+          memory: 2G          
+    networks:
+      video-manager-network:
+        aliases:
+        - localstack
 
   videomanager.api:
     image: japamanoel/video_manager:latest
@@ -35,8 +41,14 @@ services:
     depends_on:
       - videomanager.postgres
       - localstack
-    volumes:
-      - compartilhado-videos:/app/videos
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - AWS__S3__ServiceURL=http://localstack:4566
+      - AWS__S3__BucketName=videos
+      - AWS__AccessKey=test
+      - AWS__SecretKey=test
+      - AWS__Region=us-east-1
     user: root  
     command: >
       sh -c "until pg_isready -h postgres -p 5432 -U postgres; do echo 'Aguardando PostgreSQL...'; sleep 2; done &&
@@ -46,12 +58,14 @@ services:
         limits:
           cpus: '2.0'
           memory: 2G
+    networks:
+      - video-manager-network
 
   videomanager.postgres:
     image: postgres:latest
     container_name: videomanager.postgres
     ports:
-      - "5432:5432"   
+      - "5432:5432"
     environment:
       - POSTGRES_DB=VideoManager
       - POSTGRES_USER=postgres
@@ -63,8 +77,14 @@ services:
         limits:
           cpus: '1.5'
           memory: 1.5G
+    networks:
+      - video-manager-network
 
 volumes:
   localstack_data:
   postgres_data:
-  compartilhado-videos:
+
+networks:
+  video-manager-network:
+    name: video-manager-network
+    driver: bridge

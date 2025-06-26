@@ -6,7 +6,7 @@ namespace VideoManager.Application;
 
 public class Helper
 {
-    public static Video MapRequest(IFormFile arquivo, string usuario, byte[]? conteudo, string caminho)
+    public static Video MapRequest(IFormFile arquivo, string usuario, byte[]? conteudo, string caminhoVideoS3)
     {
         return new Video
         {
@@ -15,7 +15,7 @@ public class Helper
             Status = VideoStatus.Uploaded,
             DataCriacao = DateTime.UtcNow,
             Usuario = usuario,
-            Caminho = caminho
+            CaminhoVideo = caminhoVideoS3
         };
     }
 }

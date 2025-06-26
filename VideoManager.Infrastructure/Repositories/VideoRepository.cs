@@ -31,8 +31,8 @@ public class VideoRepository(string connectionString) : IVideoRepository
     {
         using var connection = new NpgsqlConnection(_connectionString);
         var id = await connection.QuerySingleAsync<int>(
-            @"INSERT INTO Videos (NomeArquivo, Conteudo, Caminho, Status, DataCriacao, Usuario, MensagemErro) 
-              VALUES (@NomeArquivo, @Conteudo, @Caminho, @Status, @DataCriacao, @Usuario, @MensagemErro)
+            @"INSERT INTO Videos (NomeArquivo, Conteudo, CaminhoVideo, Status, DataCriacao, Usuario, MensagemErro) 
+              VALUES (@NomeArquivo, @Conteudo, @CaminhoVideo, @Status, @DataCriacao, @Usuario, @MensagemErro)
               RETURNING Id",
             video);
 
@@ -45,9 +45,8 @@ public class VideoRepository(string connectionString) : IVideoRepository
         using var connection = new NpgsqlConnection(_connectionString);
         await connection.ExecuteAsync(
             @"UPDATE Videos 
-              SET NomeArquivo = @NomeArquivo,
-                  Conteudo = @Conteudo,
-                  Caminho = @Caminho,
+              SET Conteudo = @Conteudo,
+                  CaminhoZip = @CaminhoZip,
                   Status = @Status,
                   MensagemErro = @MensagemErro
               WHERE Id = @Id",

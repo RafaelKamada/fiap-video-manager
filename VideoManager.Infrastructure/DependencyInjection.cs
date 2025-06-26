@@ -55,6 +55,9 @@ public static class DependencyInjection
             return new EmailService(apiKey ?? string.Empty, fromEmail ?? string.Empty, fromName ?? string.Empty);
         });
 
+        // Registra o serviço de armazenamento S3
+        services.AddScoped<IStorageService, S3StorageService>();
+
         return services;
     }
 }

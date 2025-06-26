@@ -4,32 +4,53 @@ using VideoManager.Application.Common.Reponse;
 using VideoManager.Domain.Entities;
 using VideoManager.Domain.Enums;
 using VideoManager.Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace VideoManager.Application.Commands;
 
-public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsService, ISendEmailCommand sendEmail, IFileStorageService fileStorage) : IAddVideoCommand
+public class AddVideoCommand : IAddVideoCommand
 {
-    private readonly IVideoRepository _videoRepository = videoRepository;
-    private readonly IFileStorageService _fileStorage = fileStorage;
-    private readonly ISqsService _sqsService = sqsService;
-    private readonly ISendEmailCommand _sendEmail = sendEmail;
+    private readonly IVideoRepository _videoRepository;
+    private readonly IFileStorageService _fileStorage;
+    private readonly ISqsService _sqsService;
+    private readonly ISendEmailCommand _sendEmail;
+    private readonly IStorageService _storageService;
+    private readonly ILogger<AddVideoCommand> _logger;
+
+    public AddVideoCommand(
+        IVideoRepository videoRepository,
+        IFileStorageService fileStorage,
+        ISqsService sqsService,
+        ISendEmailCommand sendEmail,
+        IStorageService storageService,
+        ILogger<AddVideoCommand> logger)
+    {
+        _videoRepository = videoRepository;
+        _fileStorage = fileStorage;
+        _sqsService = sqsService;
+        _sendEmail = sendEmail;
+        _storageService = storageService;
+        _logger = logger;
+    }
 
     public async Task<VideoResult> Execute(IFormFile arquivo, string usuario)
     {
         try
         {
             if (arquivo == null || arquivo.Length == 0)
-                throw new ArgumentException("Arquivo inválido ou vazio.");
+                return new VideoResult { Success = false, ErrorMessage = "Arquivo inválido ou vazio." };
 
             if (string.IsNullOrWhiteSpace(usuario))
-                throw new ArgumentException("Usuário não pode ser nulo ou vazio.");
+                return new VideoResult { Success = false, ErrorMessage = "Usuário não pode ser nulo ou vazio." };
 
-            using var memoryStream = new MemoryStream();
-            await arquivo.CopyToAsync(memoryStream);
-            var conteudo = memoryStream.ToArray();
-            var caminho = await SaveFile(arquivo);
+            // Gera um nome único para o arquivo
+            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(arquivo.FileName)}";
+            
+            // Faz upload do arquivo para o S3
+            await _storageService.UploadFileAsync(arquivo, fileName);
+            var caminhoS3 = _storageService.GetFileUrl(fileName);
 
-            Video video = Helper.MapRequest(arquivo, usuario, conteudo, caminho);
+            Video video = Helper.MapRequest(arquivo, usuario, null, caminhoS3);
 
             await SaveAsync(video);
 
@@ -40,11 +61,12 @@ public class AddVideoCommand(IVideoRepository videoRepository, ISqsService sqsSe
                 Success = true,
                 VideoId = video.Id,
                 NomeArquivo = video.NomeArquivo,
-                Status = video.Status,
+                Status = video.Status
             };
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Erro ao processar upload do vídeo");
             return new VideoResult
             {
                 Success = false,
