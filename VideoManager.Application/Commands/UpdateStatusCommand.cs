@@ -1,49 +1,45 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VideoManager.Application.Commands.Interfaces;
+﻿using VideoManager.Application.Commands.Interfaces;
 using VideoManager.Application.Common.Reponse;
-using VideoManager.Domain.Entities;
 using VideoManager.Domain.Enums;
 using VideoManager.Domain.Interfaces;
-using VideoManager.Infrastructure.Repositories;
 namespace VideoManager.Application.Commands;
 
-public class UpdateStatusCommand(IVideoRepository videoRepository, ISendEmailCommand sendEmailCommand) : IUpdateStatusCommand
+public class UpdateStatusCommand : IUpdateStatusCommand
 {
-    private readonly IVideoRepository _videoRepository = videoRepository;
-    private readonly ISendEmailCommand _sendEmailCommand = sendEmailCommand;
+    private readonly IVideoRepository _videoRepository;
+    private readonly ISendEmailCommand _sendEmailCommand;
+    private readonly IStorageService _storageService;
 
-    public async Task<VideoResult> Execute(IFormFile arquivo, string usuario, int id)
+    public UpdateStatusCommand(IVideoRepository videoRepository, ISendEmailCommand sendEmailCommand, IStorageService storageService)
     {
+        _videoRepository = videoRepository;
+        _sendEmailCommand = sendEmailCommand;
+        _storageService = storageService;
+    }
+
+    public async Task<VideoResult> Execute(int id, string caminho, VideoStatus status)
+    {
+        string usuario = string.Empty;
+
         try
         {
             var videoBase = await _videoRepository.Get(id);
 
-            if (videoBase == null || videoBase.Conteudo == null)
-                throw new Exception("Vídeo não encontrado ou sem conteúdo.");
-
-            using var memoryStream = new MemoryStream();
-            await arquivo.CopyToAsync(memoryStream);
-            var conteudo = memoryStream.ToArray();
-
-            if (string.IsNullOrWhiteSpace(usuario))
-                throw new ArgumentException("Usuário não pode ser nulo ou vazio.");
-
-            var request = Helper.MapRequest(arquivo, usuario, conteudo);
-            request.Id = videoBase.Id;
+            if (videoBase == null || videoBase.CaminhoVideo == null)
+                return new VideoResult { Success = false, ErrorMessage = "Vídeo não encontrado ou sem conteúdo." };
+                        
+            usuario = videoBase.Usuario;
+            videoBase.Status = status; 
+            videoBase.CaminhoZip = caminho;
 
             await _videoRepository.Update(videoBase);
 
             return new VideoResult
             {
                 Success = true,
-                VideoId = request.Id,
-                NomeArquivo = request.NomeArquivo,
-                Status = request.Status,
+                VideoId = videoBase.Id,
+                NomeArquivo = videoBase.NomeArquivo,
+                Status = videoBase.Status,
             };
         }
         catch (Exception ex)

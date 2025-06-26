@@ -5,17 +5,14 @@ using VideoManager.Domain.Interfaces;
 
 namespace VideoManager.Infrastructure.Repositories;
 
-public class VideoRepository : IVideoRepository
+public class VideoRepository(string connectionString) : IVideoRepository
 {
-    private readonly string _connectionString;
-
-    public VideoRepository(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
+    private readonly string _connectionString = connectionString;
 
     public async Task<Video?> Get(int id)
     {
+        Console.WriteLine("id: " + id);
+        Console.WriteLine("connectionString: " + _connectionString);
         using var connection = new NpgsqlConnection(_connectionString);
         return await connection.QueryFirstOrDefaultAsync<Video>(
             "SELECT * FROM Videos WHERE Id = @Id", 
@@ -34,8 +31,8 @@ public class VideoRepository : IVideoRepository
     {
         using var connection = new NpgsqlConnection(_connectionString);
         var id = await connection.QuerySingleAsync<int>(
-            @"INSERT INTO Videos (NomeArquivo, Conteudo, Status, DataCriacao, Usuario, MensagemErro) 
-              VALUES (@NomeArquivo, @Conteudo, @Status, @DataCriacao, @Usuario, @MensagemErro)
+            @"INSERT INTO Videos (NomeArquivo, Conteudo, CaminhoVideo, Status, DataCriacao, Usuario, MensagemErro) 
+              VALUES (@NomeArquivo, @Conteudo, @CaminhoVideo, @Status, @DataCriacao, @Usuario, @MensagemErro)
               RETURNING Id",
             video);
 
@@ -48,8 +45,8 @@ public class VideoRepository : IVideoRepository
         using var connection = new NpgsqlConnection(_connectionString);
         await connection.ExecuteAsync(
             @"UPDATE Videos 
-              SET NomeArquivo = @NomeArquivo,
-                  Conteudo = @Conteudo,
+              SET Conteudo = @Conteudo,
+                  CaminhoZip = @CaminhoZip,
                   Status = @Status,
                   MensagemErro = @MensagemErro
               WHERE Id = @Id",

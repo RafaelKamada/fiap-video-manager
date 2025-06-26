@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using VideoManager.Application.Commands.Interfaces;
+using VideoManager.Domain.Enums;
 using VideoManager.Domain.Interfaces;
 
 namespace VideoManager.API.Controllers;
@@ -8,11 +9,13 @@ namespace VideoManager.API.Controllers;
 [Route("api/[controller]")]
 public class VideosController(IVideoRepository videoRepository, 
                                 IAddVideoCommand addVideoCommand, 
-                                IUpdateStatusCommand updateStatusCommand) : ControllerBase
+                                IUpdateStatusCommand updateStatusCommand,
+                                IDownloadVideoCommand downloadVideoCommand) : ControllerBase
 {
     private readonly IVideoRepository _videoRepository = videoRepository;
     private readonly IAddVideoCommand _addVideoCommand = addVideoCommand;
     private readonly IUpdateStatusCommand _updateStatusCommand = updateStatusCommand;
+    private readonly IDownloadVideoCommand _downloadVideoCommand = downloadVideoCommand;
 
     [HttpPost("upload")]
     public async Task<IActionResult> Upload(IFormFile arquivo, [FromQuery] string usuario)
@@ -29,12 +32,12 @@ public class VideosController(IVideoRepository videoRepository,
     }
 
     [HttpPut("status/{id}")]
-    public async Task<IActionResult> Status(IFormFile arquivo, int id, string usuario)
+    public async Task<IActionResult> Status(int id, string caminhoZip, VideoStatus status)
     {
-        if (arquivo == null || arquivo.Length == 0)
-            return BadRequest("Nenhum arquivo enviado.");
+        if (id <= 0 || string.IsNullOrEmpty(caminhoZip))
+            return BadRequest("Nenhum arquivo enviado ou caminho do zip inválido.");
 
-        var result = await _updateStatusCommand.Execute(arquivo, usuario, id);
+        var result = await _updateStatusCommand.Execute(id, caminhoZip, status);
 
         if (result.Success)
             return Ok(result);
@@ -45,11 +48,12 @@ public class VideosController(IVideoRepository videoRepository,
     [HttpGet("{id}")]
     public async Task<IActionResult> Download(int id)
     {
-        var video = await _videoRepository.Get(id);
-        if (video == null || video.Conteudo == null)
+        var result = await _downloadVideoCommand.Execute(id);
+
+        if (!result.Success || result?.FileContent == null)
             return NotFound();
 
-        return File(video.Conteudo, "application/octet-stream", video.NomeArquivo);
+        return File(result.FileContent, "application/octet-stream", result.FileName);
     }
 
     [HttpGet("status/{usuario}")]

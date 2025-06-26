@@ -11,10 +11,10 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-
         services.AddScoped<IAddVideoCommand, AddVideoCommand>();
         services.AddScoped<ISendEmailCommand, SendEmailCommand>();
         services.AddScoped<IUpdateStatusCommand, UpdateStatusCommand>();
+        services.AddScoped<IDownloadVideoCommand, DownloadVideoCommand>();
 
         return services;
     }

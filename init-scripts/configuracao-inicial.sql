@@ -5,5 +5,7 @@ CREATE TABLE IF NOT EXISTS Videos (
     Status INTEGER NOT NULL,
     DataCriacao TIMESTAMP NOT NULL,
     MensagemErro TEXT NULL,
-    Usuario VARCHAR(100) NOT NULL
+    Usuario VARCHAR(100) NOT NULL,
+    CaminhoVideo VARCHAR(255) NULL,
+    CaminhoZip VARCHAR(255) NULL
 );
