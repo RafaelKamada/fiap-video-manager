@@ -1,5 +1,5 @@
 # 📹: Video Manager
-
+![VideoManagerCompactor](video.png?raw=true "VideoManagerCompactor")
 
 ## :pencil: Descrição do Projeto
 <p align="left">Este projeto tem como objetivo concluir as  entregas do Tech Challenge do curso de Software Architecture da Pós Graduação da FIAP 2024/2025.
@@ -9,7 +9,6 @@ Este repositório constrói um serviço para gerenciamento de vídeos.</p>
 [![Coverage Status](https://coveralls.io/repos/github/RafaelKamada/foodorder-cardapio/badge.svg?branch=main)](https://coveralls.io/github/RafaelKamada/foodorder-cardapio?branch=main)
 
  
-
 ## 🏗️ Arquitetura de Microsserviços
 ![Arquitetura](arquitetura.png?raw=true "Arquitetura")
 
@@ -19,7 +18,6 @@ Este repositório constrói um serviço para gerenciamento de vídeos.</p>
 
 ### :hammer: Detalhes desse serviço
 Serviço responsável pelo gerenciamento de vídeos da FIAP X, desenvolvido em .NET e PostgreSQL.
-
 
 ### :hammer_and_wrench: Execução do projeto
 Para rodar o serviço localmente, você precisa ter Docker e .NET 8 instalados.
