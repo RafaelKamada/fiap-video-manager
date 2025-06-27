@@ -21,4 +21,4 @@
       - name: Push Docker image
         run: |
           # docker push ${{ secrets.DOCKER_HUB_USERNAME }}/video_manager:latest
-          # docker psuh japamanoel/video_manager:latest
+          # docker push japamanoel/video_manager:latest
