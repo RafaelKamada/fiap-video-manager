@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using VideoManager.Application.Commands.Interfaces;
 using VideoManager.Domain.Enums;
 using VideoManager.Domain.Interfaces;
@@ -17,6 +18,7 @@ public class VideosController(IVideoRepository videoRepository,
     private readonly IUpdateStatusCommand _updateStatusCommand = updateStatusCommand;
     private readonly IDownloadVideoCommand _downloadVideoCommand = downloadVideoCommand;
 
+    [Authorize]
     [HttpPost("upload")]
     public async Task<IActionResult> Upload(IFormFile arquivo, [FromQuery] string usuario)
     {
@@ -31,6 +33,7 @@ public class VideosController(IVideoRepository videoRepository,
             return BadRequest(result);
     }
 
+    [Authorize]
     [HttpPut("status/{id}")]
     public async Task<IActionResult> Status(int id, string caminhoZip, VideoStatus status)
     {
@@ -45,6 +48,7 @@ public class VideosController(IVideoRepository videoRepository,
             return BadRequest(result);
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> Download(int id)
     {
@@ -56,6 +60,7 @@ public class VideosController(IVideoRepository videoRepository,
         return File(result.FileContent, "application/octet-stream", result.FileName);
     }
 
+    [Authorize]
     [HttpGet("status/{usuario}")]
     public async Task<IActionResult> ListarPorUsuario(string usuario)
     {

@@ -57,6 +57,7 @@ public static class DependencyInjection
 
         // Registra o serviço de armazenamento S3
         services.AddScoped<IStorageService, S3StorageService>();
+        services.AddScoped<ITokenService, TokenService>();
 
         return services;
     }

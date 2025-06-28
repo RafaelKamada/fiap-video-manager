@@ -11,6 +11,7 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddScoped<ITokenCommand, TokenCommand>();
         services.AddScoped<IAddVideoCommand, AddVideoCommand>();
         services.AddScoped<ISendEmailCommand, SendEmailCommand>();
         services.AddScoped<IUpdateStatusCommand, UpdateStatusCommand>();
