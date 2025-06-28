@@ -5,17 +5,12 @@ on:
   push:
     branches: 
       - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
-
 jobs:
   build:
     name: Build and Tests
     runs-on: ubuntu-latest
 
-    services:
+  services:
       postgres:
         image: postgres:15
         ports: ['5432:5432']
