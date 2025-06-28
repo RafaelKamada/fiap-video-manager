@@ -3,7 +3,7 @@ name: Continuous Delivery - Docker Hub
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, cicd_fase_5 ]
   workflow_dispatch:
 
 jobs:
@@ -28,4 +28,4 @@ jobs:
 
       - name: 📤 Push para Docker Hub
         run: |
-          docker push japamanoel/video_manager:latest
+          # docker push japamanoel/video_manager:latest
