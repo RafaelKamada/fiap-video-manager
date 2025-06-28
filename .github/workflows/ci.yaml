@@ -45,10 +45,10 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: 🧪 Restaurar dependências
-        run: dotnet restore fiap-video-manager/VideoManager.sln
+        run: dotnet restore ../../VideoManager.sln
 
       - name: 🧱 Build do projeto
-        run: dotnet build fiap-video-manager/VideoManager.sln --no-restore --configuration Release
+        run: dotnet build ../../VideoManager.sln --no-restore --configuration Release
 
       - name: 🧪 Rodar testes
-        run: dotnet test fiap-video-manager/VideoManager.sln --no-build --verbosity normal
+        run: dotnet test ../../VideoManager.sln --no-build --verbosity normal
