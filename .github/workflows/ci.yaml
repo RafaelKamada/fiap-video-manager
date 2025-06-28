@@ -5,10 +5,14 @@ on:
   push:
     branches: 
       - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  name: Build and Tests
   build:
+    name: Build and Tests
     runs-on: ubuntu-latest
 
     services:
