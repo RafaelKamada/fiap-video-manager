@@ -7,8 +7,9 @@ on:
       - main
 
 jobs:
+  
   build:
-    name: Build and Tests
+    name: teste
     runs-on: ubuntu-latest
 
     services:
