@@ -1,5 +1,5 @@
 # .github/workflows/ci.yaml
-name: Continuous Integration - Build e Testes
+name: Continuous Integration - Build and Tests
 
 on:
   push:
@@ -7,10 +7,10 @@ on:
       - main
 
 jobs:
-  build:
-    
+  build_and_test:
+    name: Build and test
     runs-on: ubuntu-latest
-
+    
     services:
       postgres:
         image: postgres:15
