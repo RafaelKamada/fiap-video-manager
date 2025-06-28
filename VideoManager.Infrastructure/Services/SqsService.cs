@@ -53,8 +53,9 @@ public class SqsService(IAmazonSQS sqsClient ,string queueUrl) : ISqsService
 
         var message = new VideoContent
         {
-            VideoId = video.Id.ToString(),
-            Content = video.CaminhoVideo!
+            Video_Id = video.Id.ToString(),
+            Path = video.CaminhoVideo!,
+            Extension = Path.GetExtension(video.NomeArquivo)
         };
         return message;
     }
