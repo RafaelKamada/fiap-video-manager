@@ -21,11 +21,10 @@
             username: ${{ secrets.DOCKER_HUB_USERNAME }}
             password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
         - name: Build Docker image
-          needs: Build and Tests
           run: |
             # docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/video_manager:latest .
             docker build -t japamanoel/video_manager:latest .
         - name: Push Docker image
           run: |
             # docker push ${{ secrets.DOCKER_HUB_USERNAME }}/video_manager:latest
-            docker push japamanoel/video_manager:latest
+            # docker push japamanoel/video_manager:latest
