@@ -24,7 +24,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: foodorder_test
+          POSTGRES_DB: foodorderdb
         options: >-
           --health-cmd "pg_isready -U postgres"
           --health-interval 10s
