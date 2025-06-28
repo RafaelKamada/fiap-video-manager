@@ -1,10 +1,10 @@
-name: CI - Build e Testes
+name: Continuous Integration - Build e Testes
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
   build:
@@ -46,28 +46,3 @@ jobs:
 
       - name: 🧪 Rodar testes
         run: dotnet test fiap-video-manager/VideoManager.sln --no-build --verbosity normal
-
-  deploy:
-    name: Docker Hub Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-      - name: Build Docker image
-        run: |
-          # docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/video_manager:latest .
-          docker build -t japamanoel/video_manager:latest .
-
-      - name: Push Docker image
-        run: |
-          # docker push ${{ secrets.DOCKER_HUB_USERNAME }}/video_manager:latest
-          docker push japamanoel/video_manager:latest

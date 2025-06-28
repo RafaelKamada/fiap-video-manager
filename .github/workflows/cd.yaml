@@ -1,24 +1,33 @@
-  deploy:
-    name: Docker Hub Deploy
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+  name: Continuous Delivery
 
-    steps:
-      - uses: actions/checkout@v4
+  on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+  jobs:
+    deploy:
+      name: Docker Hub Deploy
+      needs: build
+      runs-on: ubuntu-latest
+      if: github.ref == 'refs/heads/main'
 
-      - name: Build Docker image
-        run: |
-          # docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/video_manager:latest .
-          docker build -t japamanoel/video_manager:latest .
+      steps:
+        - uses: actions/checkout@v4
 
-      - name: Push Docker image
-        run: |
-          # docker push ${{ secrets.DOCKER_HUB_USERNAME }}/video_manager:latest
-          docker push japamanoel/video_manager:latest
+        - name: Log in to Docker Hub
+          uses: docker/login-action@v3
+          with:
+            username: ${{ secrets.DOCKER_HUB_USERNAME }}
+            password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+        - name: Build Docker image
+          run: |
+            # docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/video_manager:latest .
+            docker build -t japamanoel/video_manager:latest .
+
+        - name: Push Docker image
+          run: |
+            # docker push ${{ secrets.DOCKER_HUB_USERNAME }}/video_manager:latest
+            docker push japamanoel/video_manager:latest
