@@ -1,10 +1,10 @@
-name: Continuous Delivery
+# .github/workflows/cd.yaml
+name: Continuous Delivery - Docker Hub
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -13,18 +13,19 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - uses: actions/checkout@v4
+      - name: 📥 Checkout do código
+        uses: actions/checkout@v4
 
-      - name: Log in to Docker Hub
+      - name: 🔐 Login no Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Build Docker image
+      - name: 🛠️ Build Docker image
         run: |
           docker build -t japamanoel/video_manager:latest .
 
-      - name: Push Docker image
+      - name: 📤 Push para Docker Hub
         run: |
           docker push japamanoel/video_manager:latest
