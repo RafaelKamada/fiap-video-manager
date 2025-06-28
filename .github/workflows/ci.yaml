@@ -33,7 +33,7 @@ jobs:
 
     env:
       MIX_ENV: test
-      DATABASE_URL: "Host=localhost;Username=postgres;Password=postgres;Database=foodorder_test"
+      DATABASE_URL: "Host=localhost;Username=postgres;Password=postgres;Database=foodorderdb"
 
     steps:
       - name: 📥 Checkout do código
