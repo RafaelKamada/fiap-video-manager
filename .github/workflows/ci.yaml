@@ -3,14 +3,12 @@ name: Continuous Integration - Build e Testes
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  workflow_dispatch:
+    branches: 
+      - main
 
   jobs:
     build:
-      name: Build & Test
+      
       runs-on: ubuntu-latest
   
       services:
