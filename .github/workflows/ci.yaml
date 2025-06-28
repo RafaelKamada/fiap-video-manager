@@ -8,10 +8,9 @@ on:
   workflow_dispatch:
     branches: all
     
-  jobs:
-    build:
-      name: Build & Test
-      runs-on: ubuntu-latest
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
 
     services:
       postgres:
