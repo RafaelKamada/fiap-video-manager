@@ -45,10 +45,8 @@ public class AddVideoCommand : IAddVideoCommand
 
             // Gera um nome único para o arquivo
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(arquivo.FileName)}";
-            
-            // Faz upload do arquivo para o S3
-            await _storageService.UploadFileAsync(arquivo, fileName);
-            var caminhoS3 = _storageService.GetFileUrl(fileName);
+
+            string caminhoS3 = await SaveS3(arquivo, fileName);
 
             Video video = Helper.MapRequest(arquivo, usuario, null, caminhoS3);
 
@@ -75,19 +73,20 @@ public class AddVideoCommand : IAddVideoCommand
         }            
     }
 
-    private async Task<string> SaveFile(IFormFile file)
+    /// <summary>
+    /// Faz upload do arquivo para o S3 e retorna o caminho do arquivo no S3.
+    /// </summary>
+    /// <param name="arquivo"></param>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
+    private async Task<string> SaveS3(IFormFile arquivo, string fileName)
     {
-        try
-        {
-            Console.WriteLine($"Salvando arquivo: {file.FileName}");
-
-            return await _fileStorage.SaveAsync(file);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Erro ao salvar o arquivo", ex);
-        }
+        await _storageService.UploadFileAsync(arquivo, fileName);
+        var caminhoS3 = _storageService.GetFileUrl(fileName);
+        return caminhoS3;
     }
+
+
     private async Task SaveAsync(Video video)
     {
         try
