@@ -9,7 +9,6 @@
   jobs:
     deploy:
       name: Docker Hub Deploy
-      needs: build
       runs-on: ubuntu-latest
       if: github.ref == 'refs/heads/main'
 
@@ -22,6 +21,7 @@
             username: ${{ secrets.DOCKER_HUB_USERNAME }}
             password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
         - name: Build Docker image
+          needs: Build and Tests
           run: |
             # docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/video_manager:latest .
             docker build -t japamanoel/video_manager:latest .
