@@ -16,9 +16,9 @@
       - name: Build Docker image
         run: |
           # docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/video_manager:latest .
-          # docker build -t japamanoel/video_manager:latest .
+          docker build -t japamanoel/video_manager:latest .
 
       - name: Push Docker image
         run: |
           # docker push ${{ secrets.DOCKER_HUB_USERNAME }}/video_manager:latest
-          # docker push japamanoel/video_manager:latest
+          docker push japamanoel/video_manager:latest
