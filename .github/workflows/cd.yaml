@@ -1,0 +1,31 @@
+name: Continuous Delivery
+
+on:
+  workflow_run:
+    workflows: ["Continuous Integration - Build and Tests"]  # nome exato do CI
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Docker Hub Deploy
+    runs-on: ubuntu-latest
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build Docker image
+        run: docker build -t japamanoel/video_manager:latest .
+
+      - name: Push Docker image
+        #run: docker push japamanoel/video_manager:latest

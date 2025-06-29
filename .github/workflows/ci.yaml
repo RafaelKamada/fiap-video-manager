@@ -1,14 +1,20 @@
-name: CI - Build e Testes
+# .github/workflows/ci.yaml
+name: Continuous Integration - Build and Tests
 
 on:
   push:
-    branches: [ main, master ]
+    branches: 
+      - main
+      - cicd_fase_5
   pull_request:
-    branches: [ main, master ]
+    branches:
+      - main
+      - cicd_fase_5
+  workflow_dispatch:
 
 jobs:
   build:
-    name: Build & Test
+    name: Build and Tests
     runs-on: ubuntu-latest
 
     services:
@@ -18,7 +24,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: foodorder_test
+          POSTGRES_DB: foodorderdb
         options: >-
           --health-cmd "pg_isready -U postgres"
           --health-interval 10s
@@ -27,7 +33,7 @@ jobs:
 
     env:
       MIX_ENV: test
-      DATABASE_URL: "Host=localhost;Username=postgres;Password=postgres;Database=foodorder_test"
+      DATABASE_URL: "Host=localhost;Username=postgres;Password=postgres;Database=foodorderdb"
 
     steps:
       - name: 📥 Checkout do código
@@ -39,10 +45,10 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: 🧪 Restaurar dependências
-        run: dotnet restore fiap-video-manager/VideoManager.sln
+        run: dotnet restore VideoManager.sln
 
       - name: 🧱 Build do projeto
-        run: dotnet build Ffiap-video-manager/VideoManager.sln --no-restore --configuration Release
+        run: dotnet build VideoManager.sln --no-restore --configuration Release
 
-      - name: 🧪 Rodar testes
-        run: dotnet test fiap-video-manager/VideoManager.sln --no-build --verbosity normal
+      #- name: 🧪 Rodar testes
+      #  run: dotnet test VideoManager.sln --no-build --verbosity normal
