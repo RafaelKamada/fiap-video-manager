@@ -2,7 +2,7 @@
 
   on:
     workflow_run:
-      workflows: ["CI - Build and Tests"]
+      workflows: ["Continuous Integration - Build and Tests"]
       types:
         - completed
 
