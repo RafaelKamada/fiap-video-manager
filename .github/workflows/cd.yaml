@@ -28,4 +28,4 @@ jobs:
         run: docker build -t japamanoel/video_manager:latest .
 
       - name: Push Docker image
-        #run: docker push japamanoel/video_manager:latest
+        run: docker push japamanoel/video_manager:latest
