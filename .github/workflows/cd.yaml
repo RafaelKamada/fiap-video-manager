@@ -6,16 +6,16 @@
     pull_request:
       branches: [ main, cicd_fase_5 ]
     workflow_run:
-    workflows: ["Continuous Integration - Build and Tests"]  # mesmo nome definido no ci.yaml
-    types:
-      - completed
+      workflows: ["Continuous Integration - Build and Tests"]  # mesmo nome definido no ci.yaml
+      types:
+        - completed
 
 
   jobs:
     deploy:
       name: Docker Hub Deploy
       runs-on: ubuntu-latest
-      if: github.ref == 'refs/heads/main'
+      #if: github.ref == 'refs/heads/main'
       if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
 
