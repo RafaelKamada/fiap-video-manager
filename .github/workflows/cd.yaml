@@ -25,7 +25,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t japamanoel/video_manager:latest .
+        run: docker build -t japamanoel/video_manager:latest ./VideoManager.API
 
       - name: Push Docker image
         run: docker push japamanoel/video_manager:latest
