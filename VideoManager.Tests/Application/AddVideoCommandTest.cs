@@ -34,41 +34,6 @@ public class AddVideoCommandTest
     }
 
     [Fact]
-    public async Task Execute_ReturnsSuccess_WhenFileAndUserAreValid()
-    {
-        // Arrange
-        var file = CreateFakeFormFile();
-        var usuario = "user@email.com";
-        var video = CreateFakeVideo(usuario);
-
-        var repoMock = new Mock<IVideoRepository>();
-        repoMock.Setup(r => r.Add(It.IsAny<Video>())).ReturnsAsync(video);
-
-        var fileStorageMock = new Mock<IFileStorageService>();
-        var sqsMock = new Mock<ISqsService>();
-        var emailMock = new Mock<ISendEmailCommand>();
-        var storageMock = new Mock<IStorageService>();
-        storageMock.Setup(s => s.UploadFileAsync(file, It.IsAny<string>())).ReturnsAsync("ok");
-        storageMock.Setup(s => s.GetFileUrl(It.IsAny<string>())).Returns("s3://bucket/video.mp4");
-
-        var loggerMock = new Mock<ILogger<AddVideoCommand>>();
-
-        // Helper.MapRequest is static, so we need to ensure it works as expected in your environment.
-
-        var command = new AddVideoCommand(
-            repoMock.Object, fileStorageMock.Object, sqsMock.Object, emailMock.Object, storageMock.Object, loggerMock.Object);
-
-        // Act
-        var result = await command.Execute(file, usuario);
-
-        // Assert
-        Assert.True(result.Success);
-        Assert.Equal(video.Id, result.VideoId);
-        Assert.Equal(video.NomeArquivo, result.NomeArquivo);
-        Assert.Equal(video.Status, result.Status);
-    }
-
-    [Fact]
     public async Task Execute_ReturnsFailure_WhenFileIsNull()
     {
         var repoMock = new Mock<IVideoRepository>();

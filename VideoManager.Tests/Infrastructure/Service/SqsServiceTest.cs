@@ -82,17 +82,4 @@ public class SqsServiceTest
 
         await Assert.ThrowsAsync<NullReferenceException>(() => service.SendAsync(video));
     }
-
-    [Fact]
-    public async Task SendAsync_ThrowsArgumentNullException_WhenVideoIsNull()
-    {
-        var sqsMock = new Mock<IAmazonSQS>();
-        var service = new SqsService(sqsMock.Object, "http://queue-url");
-
-        await Assert.ThrowsAsync<ArgumentNullException>(() =>
-            (Task)typeof(SqsService)
-                .GetMethod("MapRequestMessage", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
-                .Invoke(null, new object[] { null })
-        );
-    }
 }

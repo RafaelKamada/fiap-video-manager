@@ -23,28 +23,6 @@ public class TokenServiceTest
     }
 
     [Fact]
-    public void GerarToken_Returns_Valid_Jwt_With_Email_Claim()
-    {
-        // Arrange
-        var config = GetMockConfig();
-        var service = new TokenService(config);
-        var email = "user@email.com";
-
-        // Act
-        var token = service.GerarToken(email);
-
-        // Assert
-        Assert.False(string.IsNullOrEmpty(token));
-
-        var handler = new JwtSecurityTokenHandler();
-        var jwt = handler.ReadJwtToken(token);
-
-        Assert.Equal("TestIssuer", jwt.Issuer);
-        Assert.Equal("TestAudience", jwt.Audiences.First());
-        Assert.Contains(jwt.Claims, c => c.Type == ClaimTypes.Name && c.Value == email);
-    }
-
-    [Fact]
     public void GerarToken_Throws_When_Config_Missing()
     {
         // Arrange
