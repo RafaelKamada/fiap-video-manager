@@ -15,7 +15,7 @@ services:
       - DATA_DIR=/tmp/localstack/data
       - HOSTNAME_EXTERNAL=localstack 
     volumes:
-      - ./init-scripts:/etc/localstack/init/ready.d
+      - ./init-scripts/localstack:/etc/localstack/init/ready.d
       - localstack_data:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock
     deploy:
@@ -45,10 +45,16 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
       - AWS__S3__ServiceURL=http://localstack:4566
-      - AWS__S3__BucketName=videos
+      - AWS__S3__BucketName=video-compactor
       - AWS__AccessKey=test
       - AWS__SecretKey=test
-      - AWS__Region=us-east-1
+      - AWS__Region=us-east-1 
+      - Auth__User=VideoCompactor  
+      - Auth__Password=$2a$11$8gB/imF7S9k9aAhgLd.DHuCNwOI4EtnTCTTQbar7usvikNDLlCrEu 
+      - JwtSettings__Issuer=https://localhost:5001
+      - JwtSettings__Audience=https://localhost:5001
+      - JwtSettings__Key=d4f8e27b3b1a4c5e8f1d3b7e9c0a2d5f7e6b8c9d0a1b2c3d4e5f6789abcd1234
+      - JwtSettings__ExpiryMinutes=60
     user: root  
     command: >
       sh -c "until pg_isready -h postgres -p 5432 -U postgres; do echo 'Aguardando PostgreSQL...'; sleep 2; done &&
@@ -72,6 +78,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+      - ./init-scripts/postgresql:/docker-entrypoint-initdb.d
     deploy:
       resources:
         limits:
