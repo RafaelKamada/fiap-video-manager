@@ -6,7 +6,7 @@
 Este repositório constrói um serviço para gerenciamento de vídeos.</p>
 
 ## 📊 Code Coverage
-[![Coverage Status](https://coveralls.io/repos/github/RafaelKamada/foodorder-cardapio/badge.svg?branch=main)](https://coveralls.io/github/RafaelKamada/foodorder-cardapio?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/RafaelKamada/fiap-video-manager/badge.svg?branch=main)](https://coveralls.io/github/RafaelKamada/fiap-video-manager?branch=main)
 
  
 ## 🏗️ Arquitetura de Microsserviços
