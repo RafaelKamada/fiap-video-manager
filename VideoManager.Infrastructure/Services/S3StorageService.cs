@@ -14,7 +14,7 @@ public class S3StorageService : IStorageService
 
     public S3StorageService(IConfiguration configuration)
     {
-        _bucketName = configuration["AWS:S3:BucketName"] ?? "videos";
+        _bucketName = configuration["AWS:S3:BucketName"] ?? "video-compactor";
         _serviceUrl = configuration["AWS:S3:ServiceURL"] ?? "http://localhost:4566";
 
         var config = new AmazonS3Config
