@@ -4,6 +4,8 @@ using VideoManager.Application.Common.Reponse;
 using VideoManager.Application.Common;
 using VideoManager.Domain.Interfaces;
 
+namespace VideoManager.Application.Commands;
+
 public class TokenCommand(IConfiguration config, ITokenService tokenService) : ITokenCommand
 {
     private readonly IConfiguration _config = config ?? throw new ArgumentNullException(nameof(config));
