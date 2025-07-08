@@ -22,6 +22,11 @@ public class TokenCommand(IConfiguration config, ITokenService tokenService) : I
 
     private bool ValidatePassword(LoginRequest request)
     {
+        string hash = BCrypt.Net.BCrypt.HashPassword(request.Password.Trim());
+        
+        Console.WriteLine("Senha: " + request.Password.Trim());
+        Console.WriteLine("Hash BCrypt: " + hash);
+
         var senhaHash = _config["Auth:Password"];
         return BCrypt.Net.BCrypt.Verify(request.Password.Trim(), senhaHash);
     }
