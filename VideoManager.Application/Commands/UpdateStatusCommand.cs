@@ -45,6 +45,8 @@ public class UpdateStatusCommand : IUpdateStatusCommand
         catch (Exception ex)
         {
             SendEmail(id, usuario, "Erro ao atualizar vídeo", ex.Message).GetAwaiter().GetResult();
+            Console.WriteLine($"Falha ao atualizar vídeo: Vide logs");
+            Console.WriteLine($"Erro ao atualizar vídeo: {ex.Message}");
 
             return new VideoResult
             {
