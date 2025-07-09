@@ -9,6 +9,6 @@ namespace VideoManager.Domain.Interfaces
 {
     public interface ISqsService
     {
-        Task SendAsync(Video video);
+        Task SendAsync(Video video, string fileName);
     }
 }

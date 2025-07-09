@@ -31,6 +31,7 @@ services:
   videomanager.api:
     image: japamanoel/video_manager:latest
     container_name: videomanager.api
+    pull_policy: always
     # image: ${DOCKER_REGISTRY-}videomanagerapi
     # container_name: videomanager.api
     # build:

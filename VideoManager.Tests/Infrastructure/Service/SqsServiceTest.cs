@@ -25,7 +25,7 @@ public class SqsServiceTest
         };
 
         // Act
-        await service.SendAsync(video);
+        await service.SendAsync(video, "video.mp4");
 
         // Assert
         sqsMock.Verify(s => s.SendMessageAsync(
@@ -62,7 +62,7 @@ public class SqsServiceTest
         };
 
         // Act
-        await service.SendAsync(video);
+        await service.SendAsync(video, "video2.mp4");
 
         // Assert: Should retry 3 times (Polly default in your code)
         Assert.Equal(3, callCount);
@@ -80,6 +80,6 @@ public class SqsServiceTest
             CaminhoVideo = null
         };
 
-        await Assert.ThrowsAsync<NullReferenceException>(() => service.SendAsync(video));
+        await Assert.ThrowsAsync<NullReferenceException>(() => service.SendAsync(video, "video.mp4"));
     }
 }
