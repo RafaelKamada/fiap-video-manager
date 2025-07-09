@@ -25,9 +25,9 @@ public class SqsService(IAmazonSQS sqsClient ,string queueUrl) : ISqsService
                     Console.WriteLine($"Erro ao enviar para o SQS. Tentando novamente em {time.TotalSeconds}s...");
                 });
 
-    public async Task SendAsync(Video video)
+    public async Task SendAsync(Video video, string fileName)
     {
-        VideoContent message = MapRequestMessage(video);
+        VideoContent message = MapRequestMessage(video, fileName);
 
         var messageJson = JsonSerializer.Serialize(message);
 
@@ -47,7 +47,7 @@ public class SqsService(IAmazonSQS sqsClient ,string queueUrl) : ISqsService
         });
     }
 
-    private static VideoContent MapRequestMessage(Video video)
+    private static VideoContent MapRequestMessage(Video video, string fileName)
     {
         //var base64Content = GetArchive(video);
 
@@ -55,7 +55,8 @@ public class SqsService(IAmazonSQS sqsClient ,string queueUrl) : ISqsService
         {
             Video_Id = video.Id.ToString(),
             Path = video.CaminhoVideo!,
-            Extension = Path.GetExtension(video.CaminhoVideo!)
+            Extension = Path.GetExtension(video.CaminhoVideo!),
+            FileName = fileName
         };
         return message;
     }

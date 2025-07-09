@@ -52,7 +52,7 @@ public class AddVideoCommand : IAddVideoCommand
 
             await SaveAsync(video);
 
-            await SendVideoToSqs(video);
+            await SendVideoToSqs(video, fileName);
 
             return new VideoResult
             {
@@ -100,12 +100,12 @@ public class AddVideoCommand : IAddVideoCommand
         }
     }
 
-    private async Task SendVideoToSqs(Video video)
+    private async Task SendVideoToSqs(Video video, string fileName)
     {
         try
         {
             Console.WriteLine($"Enviando vídeo {video.NomeArquivo} para SQS...");
-            await _sqsService.SendAsync(video);
+            await _sqsService.SendAsync(video, fileName);
         }
         catch (Exception ex)
         {
