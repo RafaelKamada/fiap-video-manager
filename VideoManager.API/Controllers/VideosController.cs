@@ -33,7 +33,6 @@ public class VideosController(IVideoRepository videoRepository,
             return BadRequest(result);
     }
 
-    [Authorize]
     [HttpPut("status/{id}")]
     public async Task<IActionResult> Status(int id, string caminhoZip, VideoStatus status)
     {
