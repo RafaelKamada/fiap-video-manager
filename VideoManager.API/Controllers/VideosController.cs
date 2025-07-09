@@ -37,15 +37,23 @@ public class VideosController(IVideoRepository videoRepository,
     [HttpPut("status/{id}")]
     public async Task<IActionResult> Status(int id, string caminhoZip, VideoStatus status)
     {
+        Console.WriteLine($"Iniciando chamada da API - endpoint PUT - id: {id} - caminhoZip: {caminhoZip} - status: {status.ToString()}");
+
         if (id <= 0 || string.IsNullOrEmpty(caminhoZip))
             return BadRequest("Nenhum arquivo enviado ou caminho do zip inválido.");
 
         var result = await _updateStatusCommand.Execute(id, caminhoZip, status);
 
         if (result.Success)
+        {
+            Console.WriteLine("retorna sucesso da API");
             return Ok(result);
+        }
         else
+        {
+            Console.WriteLine("retorna ERRO da API");
             return BadRequest(result);
+        }
     }
 
     [Authorize]
