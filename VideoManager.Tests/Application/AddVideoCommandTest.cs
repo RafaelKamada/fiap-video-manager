@@ -114,7 +114,7 @@ public class AddVideoCommandTest
 
         var fileStorageMock = new Mock<IFileStorageService>();
         var sqsMock = new Mock<ISqsService>();
-        sqsMock.Setup(s => s.SendAsync(It.IsAny<Video>())).ThrowsAsync(new Exception("SQS error"));
+        sqsMock.Setup(s => s.SendAsync(It.IsAny<Video>(), It.IsAny<string>())).ThrowsAsync(new Exception("SQS error"));
 
         var emailMock = new Mock<ISendEmailCommand>();
         emailMock.Setup(e => e.SendEmailAsync(
