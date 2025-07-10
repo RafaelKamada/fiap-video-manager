@@ -34,6 +34,11 @@ public class UpdateStatusCommand : IUpdateStatusCommand
 
             await _videoRepository.Update(videoBase);
 
+            if (status == VideoStatus.Erro)
+            {
+                SendEmail(id, usuario, "Erro ao atualizar vídeo", "Ocorreu um erro durante o processamento!").GetAwaiter().GetResult();
+            }
+
             return new VideoResult
             {
                 Success = true,
