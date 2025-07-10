@@ -48,7 +48,34 @@ docker-compose down
 | PUT    | /api/Videos/status/{id}                 | Atualiza o status do processamento de video.          |  
 | GET    | /api/Videos/{id}                        | Realiza download de um zip de video pelo seu ID.      | 
 | GET    | /api/Videos/status/{usuario}            | Consulta listagem de status dos vídeos de um usuário. |
+| POST   | /api/Auth/login                         | Realiza autenticação.                                 |
 
+### 🔑 Autenticação
+A aplicação utiliza autenticação baseada em JWT (JSON Web Token).
+
+Quando um usuário faz login, a API gera um token JWT contendo informações como email e roles (caso implementado).
+
+Esse token é assinado com uma chave secreta definida nas configurações e possui um tempo de expiração.
+
+O token gerado deve ser enviado no header Authorization das requisições protegidas, no formato:
+
+Authorization: Bearer {seu_token_aqui}
+A API valida esse token em cada requisição para garantir que:
+
+Ele está assinado com a chave correta.
+
+Não está expirado.
+
+Possui o issuer e audience esperados.
+
+Essa autenticação garante segurança e controle de acesso nos endpoints protegidos da aplicação.
+
+```
+{
+    "user": "VideoCompactor",
+    "password": "$Glsop34254@"
+}
+```
 
 ### 🗄️ Outros repos do microserviço dessa arquitetura
 - [Video Compactor](https://github.com/diegogl12/video-compactor) 
